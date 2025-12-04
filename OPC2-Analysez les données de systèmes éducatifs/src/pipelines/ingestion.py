@@ -33,7 +33,41 @@ def print_dfs_head(dataframes: dict[str, pd.DataFrame]) -> None:
     print("Displayed head of all DataFrames.")
 
 
+def display_dfs_info(dataframes: dict[str, pd.DataFrame]) -> None:
+    """Display info of each DataFrame in the dictionary."""
+    for file_name, df in dataframes.items():
+        print(f"Info of {file_name}:")
+        print(f"number of rows: {df.shape[0]}")
+        print(f"number of columns: {df.shape[1]}")
+        print(f"duplicated rows: {df.duplicated().sum()}")
+        print(f"missing values per column:\n{df.isnull().sum()}")
+        print("\n")
+    print("Displayed info of all DataFrames.")
+
+
+def delete_last_unnamed_column(dataframes: dict[str, pd.DataFrame]) -> None:
+    """Delete the last unnamed column from each DataFrame if it exists."""
+    for file_name, df in dataframes.items():
+        if df.columns[-1].startswith("Unnamed"):
+            df.drop(columns=[df.columns[-1]], inplace=True)
+            print(f"Deleted last unnamed column from {file_name}.")
+
+
+def delete_duplicated_rows(dataframes: dict[str, pd.DataFrame]) -> None:
+    """Delete duplicated rows from each DataFrame."""
+    for file_name, df in dataframes.items():
+        initial_count = df.shape[0]
+        df.drop_duplicates(inplace=True)
+        print(
+            f"Deleted {initial_count - df.shape[0]} duplicated rows from {file_name}."
+        )
+
+
 if __name__ == "__main__":
     files = list_raw_data_files()
     dataframes = load_raw_data(files)
-    print_dfs_head(dataframes)
+    # print_dfs_head(dataframes)
+    delete_last_unnamed_column(dataframes)
+    display_dfs_info(dataframes)
+    delete_duplicated_rows(dataframes)
+    display_dfs_info(dataframes)
