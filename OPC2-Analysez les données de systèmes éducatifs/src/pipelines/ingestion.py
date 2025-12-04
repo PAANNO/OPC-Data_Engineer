@@ -1,85 +1,39 @@
-"""Helper functions to load and filter the World Bank EdStats extracts."""
-
-
 from pathlib import Path
-
+from IPython.display import display
 import pandas as pd
 
 
-RAW_DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "raw"
+RAW_DATA_DIR = Path().resolve() / "data" / "raw"
+print(f"Raw data directory set to: {RAW_DATA_DIR}")
 
 
-def _csv_path(name: str) -> Path:
-    """Return the absolute path to a CSV sitting under data/raw."""
-
-    return RAW_DATA_DIR / name
-
-
-def load_countries() -> pd.DataFrame:
-    """Load the EdStatsCountry table as-is."""
-
-    return pd.read_csv(_csv_path("EdStatsCountry.csv"))
+def list_raw_data_files() -> list[str]:
+    """List all CSV files in the raw data directory."""
+    files_list = list(RAW_DATA_DIR.glob("*.csv"))
+    print(f"Found {len(files_list)} raw data files.")
+    return [file.name for file in files_list]
 
 
-def load_country_series() -> pd.DataFrame:
-    """Load the EdStatsCountry-Series table as-is."""
-
-    return pd.read_csv(_csv_path("EdStatsCountry-Series.csv"))
-
-
-def load_data() -> pd.DataFrame:
-    """Load the EdStatsData fact table as-is."""
-
-    return pd.read_csv(_csv_path("EdStatsData.csv"))
+def load_raw_data(files: list[str]) -> dict[str, pd.DataFrame]:
+    """Load raw data CSV files into a dictionary of DataFrames."""
+    dataframes = {}
+    for file in files:
+        df = pd.read_csv(RAW_DATA_DIR / file)
+        dataframes[str(file)] = df
+    print(f"Loaded {len(dataframes)} DataFrames from raw data files.")
+    return dataframes
 
 
-def load_footnotes() -> pd.DataFrame:
-    """Load the EdStatsFootNote table as-is."""
-
-    return pd.read_csv(_csv_path("EdStatsFootNote.csv"))
-
-
-def load_series() -> pd.DataFrame:
-    """Load the EdStatsSeries table as-is."""
-
-    return pd.read_csv(_csv_path("EdStatsSeries.csv"))
+def print_dfs_head(dataframes: dict[str, pd.DataFrame]) -> None:
+    """Print the first n rows of each DataFrame in the dictionary."""
+    for file_name, df in dataframes.items():
+        print(f"First 5 rows of {file_name}:")
+        display(df.head())
+        print("\n")
+    print("Displayed head of all DataFrames.")
 
 
-def filter_countries(country_df: pd.DataFrame) -> pd.DataFrame:
-    """Keep rows whose Region value is filled (heuristic for real countries)."""
-
-    region = country_df.get("Region")
-    if region is None:
-        return country_df.copy()
-    mask = region.notna() & (region != "")
-    return country_df.loc[mask].copy()
-
-
-def get_valid_country_codes(country_df: pd.DataFrame) -> pd.Index:
-    """Return the list of country codes present after filtering."""
-
-    codes = filter_countries(country_df)["Country Code"].dropna().unique()
-    return pd.Index(codes)
-
-
-def filter_country_series(
-    country_series_df: pd.DataFrame, valid_codes: pd.Index
-) -> pd.DataFrame:
-    """Keep only rows with a CountryCode present in valid_codes."""
-
-    mask = country_series_df["CountryCode"].isin(valid_codes)
-    return country_series_df.loc[mask].copy()
-
-
-def filter_footnotes(footnote_df: pd.DataFrame, valid_codes: pd.Index) -> pd.DataFrame:
-    """Keep footnotes that reference real countries."""
-
-    mask = footnote_df["CountryCode"].isin(valid_codes)
-    return footnote_df.loc[mask].copy()
-
-
-def filter_data(data_df: pd.DataFrame, valid_codes: pd.Index) -> pd.DataFrame:
-    """Keep fact rows tied to real countries."""
-
-    mask = data_df["CountryCode"].isin(valid_codes)
-    return data_df.loc[mask].copy()
+if __name__ == "__main__":
+    files = list_raw_data_files()
+    dataframes = load_raw_data(files)
+    print_dfs_head(dataframes)
