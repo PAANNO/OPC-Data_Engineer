@@ -25,7 +25,7 @@ def load_raw_data(files: list[str]) -> dict[str, pd.DataFrame]:
 
 
 def print_dfs_head(dataframes: dict[str, pd.DataFrame]) -> None:
-    """Print the first n rows of each DataFrame in the dictionary."""
+    """Print the first 5 rows of each DataFrame in the dictionary."""
     for file_name, df in dataframes.items():
         print(f"First 5 rows of {file_name}:")
         display(df.head())
@@ -37,20 +37,15 @@ def display_dfs_info(dataframes: dict[str, pd.DataFrame]) -> None:
     """Display info of each DataFrame in the dictionary."""
     for file_name, df in dataframes.items():
         print(f"Info of {file_name}:")
-        print(f"number of rows: {df.shape[0]}")
-        print(f"number of columns: {df.shape[1]}")
-        print(f"duplicated rows: {df.duplicated().sum()}")
-        print(f"missing values per column:\n{df.isnull().sum()}")
+        collect_basic_info(df)
         print("\n")
     print("Displayed info of all DataFrames.")
 
 
-def delete_last_unnamed_column(dataframes: dict[str, pd.DataFrame]) -> None:
-    """Delete the last unnamed column from each DataFrame if it exists."""
-    for file_name, df in dataframes.items():
-        if df.columns[-1].startswith("Unnamed"):
-            df.drop(columns=[df.columns[-1]], inplace=True)
-            print(f"Deleted last unnamed column from {file_name}.")
+def delete_empty_colums(dataframe: pd.DataFrame) -> None:
+    """Delete empty columns from a DataFrame."""
+    empty_col = dataframe.isnull().mean() == 1.0
+    dataframe.drop(columns=dataframe.columns[empty_col], inplace=True)
 
 
 def delete_duplicated_rows(dataframes: dict[str, pd.DataFrame]) -> None:
@@ -63,11 +58,53 @@ def delete_duplicated_rows(dataframes: dict[str, pd.DataFrame]) -> None:
         )
 
 
+def collect_basic_info(dataframe: pd.DataFrame) -> None:
+    """Collect and print basic info of a DataFrame."""
+    nb_rows, nb_columns = dataframe.shape
+    print(f"DataFrame has {nb_rows} rows and {nb_columns} columns.")
+
+    # Search and delete duplicated rows
+    nb_duplicates_init = dataframe.duplicated().sum()
+    print(f"Number of duplicated rows: {nb_duplicates_init}")
+    if nb_duplicates_init > 0:
+        dataframe.drop_duplicates(inplace=True)
+        nb_duplicates_final = dataframe.duplicated().sum()
+        print(f"Number of duplicated rows after deletion: {nb_duplicates_final}")
+
+    # Search and delete empty columns
+    nb_empty_columns_init = (dataframe.isnull().mean() == 1.0).sum()
+    print(f"Number of empty columns: {nb_empty_columns_init}")
+    if nb_empty_columns_init > 0:
+        delete_empty_colums(dataframe)
+        nb_empty_columns_final = (dataframe.isnull().mean() == 1.0).sum()
+        print(f"Number of empty columns after deletion: {nb_empty_columns_final}")
+
+    # Search for numeric columns
+    nb_numeric_columns = dataframe.select_dtypes(include=["number"]).shape[1]
+    print(f"Number of numeric columns: {nb_numeric_columns}")
+    if nb_numeric_columns > 0:
+        numeric_cols = dataframe.select_dtypes(include=["number"]).columns.tolist()
+        dataframe[numeric_cols].describe()
+
+    # Search for categorical columns
+    nb_categorical_columns = dataframe.select_dtypes(
+        include=["object", "category"]
+    ).shape[1]
+    print(f"Number of categorical columns: {nb_categorical_columns}")
+    if nb_categorical_columns > 0:
+        categorical_cols = dataframe.select_dtypes(
+            include=["object", "category"]
+        ).columns.tolist()
+        for col in categorical_cols:
+            print(f"Column '{col}' value counts:\n{dataframe[col].value_counts()}\n")
+
+
 if __name__ == "__main__":
     files = list_raw_data_files()
     dataframes = load_raw_data(files)
     # print_dfs_head(dataframes)
-    delete_last_unnamed_column(dataframes)
+    for df in dataframes.values():
+        delete_empty_colums(df)
     display_dfs_info(dataframes)
     delete_duplicated_rows(dataframes)
     display_dfs_info(dataframes)
