@@ -1,24 +1,23 @@
 from pathlib import Path
-from IPython.display import display
 import pandas as pd
 
 
-RAW_DATA_DIR = Path().resolve() / "data" / "raw"
+RAW_DATA_DIR = Path().resolve() / "OPC2-Analysez les données de systèmes éducatifs" / "data" / "raw"
 print(f"Raw data directory set to: {RAW_DATA_DIR}")
 
 
-def list_raw_data_files() -> list[str]:
+def list_raw_data_files(raw_path: Path) -> list[str]:
     """List all CSV files in the raw data directory."""
-    files_list = list(RAW_DATA_DIR.glob("*.csv"))
+    files_list = list(raw_path.glob("*.csv"))
     print(f"Found {len(files_list)} raw data files.")
     return [file.name for file in files_list]
 
 
-def load_raw_data(files: list[str]) -> dict[str, pd.DataFrame]:
+def load_raw_data(files: list[str], raw_path: Path) -> dict[str, pd.DataFrame]:
     """Load raw data CSV files into a dictionary of DataFrames."""
     dataframes = {}
     for file in files:
-        df = pd.read_csv(RAW_DATA_DIR / file)
+        df = pd.read_csv(raw_path / file)
         dataframes[str(file)] = df
     print(f"Loaded {len(dataframes)} DataFrames from raw data files.")
     return dataframes
@@ -28,7 +27,7 @@ def print_dfs_head(dataframes: dict[str, pd.DataFrame]) -> None:
     """Print the first 5 rows of each DataFrame in the dictionary."""
     for file_name, df in dataframes.items():
         print(f"First 5 rows of {file_name}:")
-        display(df.head())
+        print(df.head())
         print("\n")
     print("Displayed head of all DataFrames.")
 
@@ -61,7 +60,7 @@ def delete_duplicated_rows(dataframes: dict[str, pd.DataFrame]) -> None:
 def collect_basic_info(dataframe: pd.DataFrame) -> None:
     """Collect and print basic info of a DataFrame."""
     nb_rows, nb_columns = dataframe.shape
-    print(f"DataFrame has {nb_rows} rows and {nb_columns} columns.")
+    print(f"{dataframe.index} has {nb_rows} rows and {nb_columns} columns.")
 
     # Search and delete duplicated rows
     nb_duplicates_init = dataframe.duplicated().sum()
@@ -79,7 +78,7 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
         nb_empty_columns_final = (dataframe.isnull().mean() == 1.0).sum()
         print(f"Number of empty columns after deletion: {nb_empty_columns_final}")
 
-    # Search for numeric columns
+   # Search for numeric columns
     nb_numeric_columns = dataframe.select_dtypes(include=["number"]).shape[1]
     print(f"Number of numeric columns: {nb_numeric_columns}")
     if nb_numeric_columns > 0:
@@ -100,11 +99,9 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
 
 
 if __name__ == "__main__":
-    files = list_raw_data_files()
-    dataframes = load_raw_data(files)
-    # print_dfs_head(dataframes)
-    for df in dataframes.values():
-        delete_empty_colums(df)
-    display_dfs_info(dataframes)
-    delete_duplicated_rows(dataframes)
-    display_dfs_info(dataframes)
+    files = list_raw_data_files(RAW_DATA_DIR)
+    dataframes = load_raw_data(files, RAW_DATA_DIR)
+    print_dfs_head(dataframes)
+    """for df in dataframes.values():
+        collect_basic_info(df)"""
+    collect_basic_info(dataframes["EdStatsCountry-Series.csv"])
