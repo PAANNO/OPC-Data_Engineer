@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+
 current_file = Path(__file__).resolve()
 repo_root = current_file.parents[3]
 project_root = current_file.parents[2]
@@ -87,7 +88,7 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
         nb_empty_columns_final = (dataframe.isnull().mean() == 1.0).sum()
         print(f"Number of empty columns after deletion: {nb_empty_columns_final}")
 
-   # Search for numeric columns
+    # Search for numeric columns
     nb_numeric_columns = dataframe.select_dtypes(include=["number"]).shape[1]
     print(f"Number of numeric columns: {nb_numeric_columns}")
     if nb_numeric_columns > 0:
@@ -110,7 +111,7 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
 if __name__ == "__main__":
     files = ls.list_raw_data_files(RAW_DATA_DIR)
     dataframes = ls.load_all_raw_data(files, RAW_DATA_DIR)
-    #print_dfs_head(dataframes)
+    # print_dfs_head(dataframes)
     """for df in dataframes.values():
         collect_basic_info(df)"""
     cln.first_steps_cleaning(dataframes["EdStatsCountry-Series.csv"], 0.8)
