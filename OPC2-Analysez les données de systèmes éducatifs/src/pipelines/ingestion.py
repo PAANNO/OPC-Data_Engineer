@@ -1,8 +1,17 @@
 from pathlib import Path
+import sys
+current_file = Path(__file__).resolve()
+repo_root = current_file.parents[3]
+project_root = current_file.parents[2]
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
 import pandas as pd
+from oc_tools import cleaning as cln
+from oc_tools import exploration as exp
+from oc_tools import load_save as ls
 
 
-RAW_DATA_DIR = Path().resolve() / "OPC2-Analysez les données de systèmes éducatifs" / "data" / "raw"
+RAW_DATA_DIR = project_root / "data" / "raw"
 print(f"Raw data directory set to: {RAW_DATA_DIR}")
 
 
@@ -99,9 +108,10 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
 
 
 if __name__ == "__main__":
-    files = list_raw_data_files(RAW_DATA_DIR)
-    dataframes = load_raw_data(files, RAW_DATA_DIR)
-    print_dfs_head(dataframes)
+    files = ls.list_raw_data_files(RAW_DATA_DIR)
+    dataframes = ls.load_all_raw_data(files, RAW_DATA_DIR)
+    #print_dfs_head(dataframes)
     """for df in dataframes.values():
         collect_basic_info(df)"""
-    collect_basic_info(dataframes["EdStatsCountry-Series.csv"])
+    cln.first_steps_cleaning(dataframes["EdStatsCountry-Series.csv"], 0.8)
+    exp.collect_basic_info(dataframes["EdStatsCountry-Series.csv"])
