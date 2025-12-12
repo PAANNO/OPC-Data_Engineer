@@ -111,8 +111,10 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
 if __name__ == "__main__":
     files = ls.list_raw_data_files(RAW_DATA_DIR)
     dataframes = ls.load_all_raw_data(files, RAW_DATA_DIR)
+    for df in dataframes.values():
+        df.info()
     # print_dfs_head(dataframes)
     """for df in dataframes.values():
         collect_basic_info(df)"""
-    cln.first_steps_cleaning(dataframes["EdStatsCountry-Series.csv"], 0.8)
-    exp.collect_basic_info(dataframes["EdStatsCountry-Series.csv"])
+    # cln.first_steps_cleaning(dataframes["EdStatsCountry-Series.csv"], 0.8)
+    # exp.collect_basic_info(dataframes["EdStatsCountry-Series.csv"])
