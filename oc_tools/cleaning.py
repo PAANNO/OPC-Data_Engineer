@@ -2,7 +2,7 @@
 import pandas as pd
 
 
-def delete_duplicated_rows(df: pd.DataFrame) -> None:
+def delete_duplicated_rows(df: pd.DataFrame) -> pd.DataFrame:
     """Delete duplicated rows from each DataFrame."""
     try:
         nb_duplicates_init = df.duplicated().sum()
@@ -12,9 +12,10 @@ def delete_duplicated_rows(df: pd.DataFrame) -> None:
             print("No duplicated rows found.")
     except Exception as e:
         print(f"An error occurred while deleting duplicated rows: {e}")
+    return df
 
 
-def delete_empty_colums(df: pd.DataFrame) -> None:
+def delete_empty_colums(df: pd.DataFrame) -> pd.DataFrame:
     """Delete empty columns from a DataFrame."""
     try:
         empty_col = df.isnull().mean() == 1.0
@@ -24,9 +25,12 @@ def delete_empty_colums(df: pd.DataFrame) -> None:
             print("No empty columns found.")
     except Exception as e:
         print(f"An error occurred while deleting empty columns: {e}")
+    return df
 
 
-def delete_high_missing_columns(df: pd.DataFrame, threshold: float) -> None:
+def delete_high_missing_columns(
+    df: pd.DataFrame, threshold: float = 0.3
+) -> pd.DataFrame:
     """Delete columns with a high percentage of missing values from a DataFrame."""
     try:
         high_missing_col = (df.isnull().mean() > threshold) & (df.dtypes != "float64")
@@ -36,10 +40,12 @@ def delete_high_missing_columns(df: pd.DataFrame, threshold: float) -> None:
             print("No columns with high missing values found.")
     except Exception as e:
         print(f"An error occurred while deleting high missing columns: {e}")
+    return df
 
 
-def first_steps_cleaning(df: pd.DataFrame, missing_threshold: float) -> None:
+def first_steps_cleaning(df: pd.DataFrame, missing_threshold: float) -> pd.DataFrame:
     """Perform first steps of cleaning on a DataFrame."""
-    delete_duplicated_rows(df)
-    delete_empty_colums(df)
-    delete_high_missing_columns(df, missing_threshold)
+    df = delete_duplicated_rows(df)
+    df = delete_empty_colums(df)
+    df = delete_high_missing_columns(df, missing_threshold)
+    return df

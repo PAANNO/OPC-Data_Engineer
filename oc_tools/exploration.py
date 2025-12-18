@@ -46,3 +46,13 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
         describe_categorical_columns(dataframe)
     except Exception as e:
         print(f"An error occurred while collecting basic info: {e}")
+
+
+def corr_pearson(dataframe: pd.DataFrame):
+    """Calculate and return the Pearson correlation matrix of a DataFrame."""
+    try:
+
+        correlation_matrix = dataframe.corr(method="pearson")
+        return correlation_matrix
+    except Exception as e:
+        print(f"An error occurred while calculating Pearson correlation: {e}")

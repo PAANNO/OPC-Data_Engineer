@@ -108,13 +108,39 @@ def collect_basic_info(dataframe: pd.DataFrame) -> None:
             print(f"Column '{col}' value counts:\n{dataframe[col].value_counts()}\n")
 
 
+
+def fake_country(df: pd.DataFrame) -> list:
+    """Search for non-existing country in the dataframe."""
+    fake_country = df[df["Region"].isna() & (~df["Country Code"].isin(["NRU", "GIB"]))]
+    return fake_country["Country Code"].tolist()
+
+
 if __name__ == "__main__":
     files = ls.list_raw_data_files(RAW_DATA_DIR)
     dataframes = ls.load_all_raw_data(files, RAW_DATA_DIR)
-    for df in dataframes.values():
-        df.info()
+    """for df in dataframes.values():
+        df.info()"""
     # print_dfs_head(dataframes)
     """for df in dataframes.values():
         collect_basic_info(df)"""
     # cln.first_steps_cleaning(dataframes["EdStatsCountry-Series.csv"], 0.8)
     # exp.collect_basic_info(dataframes["EdStatsCountry-Series.csv"])
+
+    # Example of cleaning fake contries
+    fake_countries = fake_country(dataframes["EdStatsCountry.csv"])
+    for key, df in dataframes.items():
+        if "Country Code" in df.columns:
+            print(key)
+            print(f"nb_rows before cleaning: {df.shape[0]}")
+            print(f"Number of fake countries in {key}: {df['Country Code'].isin(fake_countries).sum()}")
+            df = df[~df["Country Code"].isin(fake_countries)]
+            print(f"nb_rows after cleaning: {df.shape[0]}")
+        elif "CountryCode" in df.columns:
+            print(key)
+            print(f"nb_rows before cleaning: {df.shape[0]}")
+            print(f"Number of fake countries in {key}: {df['CountryCode'].isin(fake_countries).sum()}")
+            df = df[~df["CountryCode"].isin(fake_countries)]
+            print(f"nb_rows after cleaning: {df.shape[0]}")
+
+    for key in dataframes["EdStatsCountry"]:
+        print(f"{key}: {dataframes[key].shape}")
