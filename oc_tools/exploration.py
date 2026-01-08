@@ -1,5 +1,6 @@
 # oc_tools/load_save.py
 import pandas as pd
+import numpy as np
 
 
 def describe_numeric_columns(dataframe: pd.DataFrame) -> None:
@@ -56,3 +57,19 @@ def corr_pearson(dataframe: pd.DataFrame):
         return correlation_matrix
     except Exception as e:
         print(f"An error occurred while calculating Pearson correlation: {e}")
+
+
+def weighted_recent_mean(g, half_life=5):
+    """Calculate the weighted recent mean of 'Value' in DataFrame g, where weights decrease exponentially with age based on the specified half-life."""
+    try:
+        g = g.dropna(subset=["Value"]).sort_values("Year")
+        g["Year"] = pd.to_numeric(g["Year"], errors="coerce")
+        if g.empty:
+            return np.nan
+        ymax = g["Year"].iloc[-1]
+        age = (ymax - g["Year"]).to_numpy()
+        w = 0.5 ** (age / half_life)
+        return np.average(g["Value"].to_numpy(), weights=w)
+    except Exception as e:
+        print(f"An error occurred while calculating weighted recent mean: {e}")
+        return np.nan
