@@ -1,45 +1,60 @@
-# <NOM_DU_PROJET> – Parcours Data Engineer OpenClassrooms
+# OPC2 – Analysez les données de systèmes éducatifs
 
-Template de dépôt pour les projets du parcours Data Engineer OpenClassrooms.
-Remplace les éléments entre <...> par les informations de ton projet.
+Dépôt de travail pour le **projet 2** du parcours **Data Engineer – OpenClassrooms**.
+
+Ce projet a une durée estimée de **30 heures** et a pour objectif de renforcer mes fondamentaux de **Python pour la Data Science** en analysant des **données de systèmes éducatifs** à l’aide de **notebooks Jupyter**.
 
 ## 🎯 Objectifs du projet
 
 Résumé en quelques lignes :
-- Quel est le problème à résoudre ?
-- Quel est le livrable principal (pipeline ETL, dashboard, modèle, data warehouse, etc.) ?
-- Quel est le rôle joué (Data Engineer dans une équipe X, pour l’entreprise Y…) ?
+
+- Analyser un jeu de données issu de systèmes éducatifs à l’aide de Python et de Jupyter Notebook.
+- Réaliser une **analyse exploratoire univariée** et des **visualisations** pour mieux comprendre les données.
+- Mettre en place un environnement de travail adapté (Poetry / environnement virtuel, Jupyter, organisation du dépôt).
+- Produire des notebooks propres et structurés, pouvant être compris par un public métier et technique.
 
 ## 🧩 Contexte
 
-Expliquer brièvement :
-- Le contexte métier (secteur, enjeux business)
-- Le contexte technique (données disponibles, contraintes)
-- Le cadre OpenClassrooms (nom du projet, session, mentor si besoin)
+- **Contexte métier :** le projet s’inscrit dans l’analyse de données de systèmes éducatifs (indicateurs de performance, réussite, etc.) afin de mieux comprendre ces systèmes et de préparer des analyses plus avancées.
+- **Contexte technique :** jeu de données tabulaire (fichiers CSV) analysé dans des notebooks Jupyter, en utilisant principalement **Python**, **Pandas** et des bibliothèques de visualisation (Matplotlib / Seaborn, etc).
+- **Cadre OpenClassrooms :**
+  - Parcours : *Data Engineer – OpenClassrooms*
+  - Projet 2 : *Analysez les données de systèmes éducatifs*
+  - Durée indicative : *30 heures*
 
 ## 🎓 Compétences évaluées (brief OC)
 
-Lister ici les compétences indiquées dans le sujet :
-- Exemple : Mettre en place un environnement de développement pour la data
-- Exemple : Modéliser et implémenter une base de données
-- Exemple : Concevoir des pipelines de données robustes
+Compétences cibles du projet :
+
+- Appliquer des analyses statistiques descriptives et naviguer visuellement dans les données.
+- Configurer l’environnement de travail nécessaire à l’exploitation des données.
+- Corriger les anomalies manuellement et à l’aide d'outils adaptés.
 
 ## 🏗️ Architecture du projet
 
-Décrire les grandes briques :
-- Sources de données (fichiers CSV, API, base SQL…)
-- Étapes du pipeline (ingestion, nettoyage, transformation, chargement…)
-- Stockage cible (data warehouse, base analytique, fichiers parquet…)
-- Outils utilisés (Python, SQL, Spark, Airbyte, Kestra, Docker…)
+Grandes briques prévues pour ce projet :
 
-Tu peux ajouter un schéma dans `docs/` et le référencer ici :
+- **Sources de données :**
+  - Fichiers CSV fournis par OpenClassrooms (données de systèmes éducatifs).
+- **Étapes du travail :**
+  - Mise en place de l’environnement Python / Jupyter.
+  - Analyse exploratoire univariée (statistiques descriptives, visualisations).
+  - Nettoyage des données (gestion des valeurs manquantes, incohérences, doublons, etc.).
+  - Analyse plus approfondie et réponse à une problématique métier.
+- **Stockage :**
+  - Données stockées localement dans le dossier `data/` (brut vs nettoyé).
+- **Outils utilisés :**
+  - Python, Jupyter Notebook, Pandas, NumPy, Matplotlib, Seaborn.
+
+Un schéma plus détaillé pourra être ajouté dans `docs/` et référencé ici :
 
 ```mermaid
 flowchart LR
-    A[Source de données] --> B[Ingestion]
-    B --> C[Nettoyage / transformation]
-    C --> D[Base de données / Datalake]
-    D --> E[Consommation (BI / analyse)]
+    A["Jeu de données systèmes éducatifs (CSV)"] --> B[Exploration & statistiques descriptives]
+    B --> C[Nettoyage / préparation des données]
+    C --> D[Jeu de données nettoyé]
+    D --> E[Analyses complémentaires & visualisations]
+    E --> F["Restitution (notebook / rapport)"]
 ```
 
 ## 🛠️ Stack technique
@@ -47,12 +62,10 @@ flowchart LR
 - Langage : Python 3.14
 - Environnement de développement : VS Code + extensions (Python, Jupyter, etc.)
 - GGestion de version : Git & GitHub
-- Base(s) de données : `<PostgreSQL / MySQL / SQL Server / autre>`
-- Traitements de données : `<Pandas / PySpark / dbt / autres>`
-- Orchestration / ingestion : `<Airbyte / Kestra / Airflow / scripts maison…>`
-- Conteneurisation (si utilisé) : Docker, Docker Compose
-
-Adapter la liste en fonction du projet.
+- Base(s) de données : `fichiers CSV locaux.`
+- Traitements de données : `Pandas, NumPy`
+- visualisation : `Pandas Profiling, Matplotlib, Seaborn`
+- Orchestration / ingestion : `notebooks Jupyter et scripts Python`
 
 ## 📂 Structure du dépôt
 
@@ -61,14 +74,12 @@ Adapter la liste en fonction du projet.
 ├─ .vscode/
 │  └─ settings.json
 ├─ data/
-│  ├─ raw/        # données brutes (fichiers fournis par OC, exports, etc.)
+│  ├─ raw/
 │  ├─ processed/  # données nettoyées / transformées
-│  └─ external/   # sources externes (APIs, autres jeux de données)
 ├─ docs/          # schémas, compte-rendus, notes, exports de diagrammes
 |  ├─ Livrables/
 ├─ notebooks/     # notebooks Jupyter d'exploration / POC
 ├─ src/
-│  └─ project_name/      # à renommer pour chaque projet
 │      ├─ __init__.py
 │      ├─ config/        # fichiers de config (YAML/JSON)
 │      └─ pipelines/     # scripts ETL, jobs, traitements
@@ -78,8 +89,6 @@ Adapter la liste en fonction du projet.
 ├─ requirements.txt
 └─ LICENSE        # optionnel (MIT par ex.)
 ```
-Remplacer `<project_name>` par un nom de package adapté au projet
-(ex. : `customer_churn`, `etl_orders`, `log_processing`, etc.).
 
 ## 🚀 Installation & exécution
 
@@ -87,13 +96,12 @@ Remplacer `<project_name>` par un nom de package adapté au projet
 
 - Python 3.14
 - Git installé
-- (Optionnel) Docker / Docker Compose
-- Accès aux données si elles ne sont pas versionnées (voir section `data/`)
 
 ### 2. Cloner le dépôt
+Cloner le dépôt principal, puis se placer dans le dossier du projet 2 :
 ```bash
-git clone https://github.com/<ton-compte>/<nom-du-repo>.git
-cd <nom-du-repo>
+git clone https://github.com/PAANNO/OPC-Data_Engineer.git
+cd OPC-Data_Engineer/"OPC2-Analysez les données de systèmes éducatifs"
 ```
 ### 3. Créer et activer l'environnement virtuel
 ```bash
@@ -110,20 +118,6 @@ source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
-### 5. Lancer les notebooks
-
-Dans VS Code :
-1. Ouvrir le dossier du projet.
-2. Sélectionner l’interpréteur Python pointant vers `.venv`.
-3. Ouvrir un notebook dans `notebooks/`.
-4. Choisir le kernel correspondant à `.venv`.
-
-### 6. Lancer le code Python
-```bash
-python -m <project_name>.pipelines.main
-```
-(À adapter selon ton point d'entrée.)
-
 ## ✅ Qualité, formatage & tests
 
 ### Formatage
@@ -185,8 +179,6 @@ Thumbs.db
 !.vscode/settings.json
 ```
 
-Tu pourras enlever data/raw/ du .gitignore si, pour un projet, OC te demande explicitement de versionner les données.
-
 ### c) `requirements.txt` – base pour un projet data engineer
 ```txt
 # Core
@@ -214,16 +206,12 @@ pytest
 # requests
 # pydantic
 ```
-Pour chaque projet, tu ajoutes / retires les libs selon le brief.
 
 ### d) `.vscode/settings.json` – pour que VS Code soit nickel
-```js
+```json
 {
   // Interpréteur Python : le .venv du projet
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-
-  // Sur Windows, si le chemin ci-dessus pose problème, tu peux le remplacer par :
-  // "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
 
   // Formatage automatique
   "editor.formatOnSave": true,
@@ -239,20 +227,5 @@ Pour chaque projet, tu ajoutes / retires les libs selon le brief.
 
   // Jupyter: utiliser le kernel associé à l'interpréteur sélectionné
   "jupyter.jupyterServerType": "local"
-}
-```
-
-Pour t’éviter de dupliquer les réglages selon l’OS, tu peux aussi simplement laisser VS Code détecter l’interpréteur et ne garder que la partie formatage :
-
-```json
-{
-  "editor.formatOnSave": true,
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
-  },
-  "files.exclude": {
-    "**/__pycache__": true,
-    "**/.pytest_cache": true
-  }
 }
 ```
