@@ -1,0 +1,72 @@
+name: Sync OPC projects into OPC-Data_Engineer
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Cron en UTC (ex: toutes les 6h)
+    - cron: "0 */12 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout OPC-Data_Engineer
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "opc-sync-bot"
+          git config user.email "opc-sync-bot@users.noreply.github.com"
+
+      - name: Sync projects (mirror)
+        env:
+          TOKEN: ${{ secrets.SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # "Dossier_dans_OPC-Data_Engineer|Owner/Repo_source|branche"
+          MAP=(
+            "OPC2-Analysez_les_donnees_de_systemes_educatifs|PAANNO/OPC2-Analysez_les_donnees_de_systemes_educatifs|main"
+            "OPC3-Entrainez-vous_avec_SQL_et_creez_votre_BDD|PAANNO/OPC3-Entrainez-vous_avec_SQL_et_creez_votre_BDD|main"
+            "OPC4-Auditez_un_environnement_de_donnees|PAANNO/OPC4-Auditez_un_environnement_de_donnees|main"
+            "OPC5-Maintenez_et_documentez_un_systeme_de_stockage_des_donnees_securise_et_performant|PAANNO/OPC5-Maintenez_et_documentez_un_systeme_de_stockage_des_donnees_securise_et_performant|main"
+            "OPC6-Anticipez_les_besoins_en_consommation_de_batiments|PAANNO/OPC6-Anticipez_les_besoins_en_consommation_de_batiments|main"
+            "OPC7-Concevez_et_analysez_une_base_de_donnees_NoSQL|PAANNO/OPC7-Concevez_et_analysez_une_base_de_donnees_NoSQL|main"
+            "OPC8-Construisez_et_testez_une_infrastructure_de_donnees|PAANNO/OPC8-Construisez_et_testez_une_infrastructure_de_donnees|main"
+            "OPC9-Modelisez_une_infrastructure_dans_le_cloud|PAANNO/OPC9-Modelisez_une_infrastructure_dans_le_cloud|main"
+            "OPC10-Mettez_en_place_un_pipeline_d_orchestration_des_flux|PAANNO/OPC10-Mettez_en_place_un_pipeline_d_orchestration_des_flux|main"
+            "OPC11-Concevez_et_deployez_un_systeme_RAG|PAANNO/OPC11-Concevez_et_deployez_un_systeme_RAG|main"
+            "OPC12-Gerez_un_projet_d-infrastructure|PAANNO/OPC12-Gerez_un_projet_d-infrastructure|main"
+            "OPC13-Passez_votre_systeme_IA_du_POC_au_MVP_et_realisez_votre_portfolio_de_Data_Engineer|PAANNO/OPC13-Passez_votre_systeme_IA_du_POC_au_MVP_et_realisez_votre_portfolio_de_Data_Engineer|main"
+          )
+
+          for entry in "${MAP[@]}"; do
+            IFS='|' read -r DIR REPO BRANCH <<< "$entry"
+
+            url="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+
+            rm -rf /tmp/opc-src
+            git clone --depth 1 --branch "$BRANCH" "$url" /tmp/opc-src
+
+            mkdir -p "$DIR"
+            rsync -a --delete \
+              --exclude '.git' \
+              --exclude '.venv' \
+              --exclude '__pycache__' \
+              --exclude '.ipynb_checkpoints' \
+              /tmp/opc-src/ "$DIR/"
+          done
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore: sync OPC projects snapshots"
+          git push
