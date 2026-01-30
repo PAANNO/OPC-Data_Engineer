@@ -39,7 +39,7 @@ jobs:
             "OPC7-Concevez_et_analysez_une_base_de_donnees_NoSQL|PAANNO/OPC7-Concevez_et_analysez_une_base_de_donnees_NoSQL|main"
             "OPC8-Construisez_et_testez_une_infrastructure_de_donnees|PAANNO/OPC8-Construisez_et_testez_une_infrastructure_de_donnees|main"
             "OPC9-Modelisez_une_infrastructure_dans_le_cloud|PAANNO/OPC9-Modelisez_une_infrastructure_dans_le_cloud|main"
-            "OPC10-Mettez_en_place_un_pipeline_d_orchestration_des_flux|PAANNO/OPC10-Mettez_en_place_un_pipeline_d_orchestration_des_flux|main"
+            "OPC10-Mettez_en_place_un_pipeline_d-orchestration_des_flux|PAANNO/OPC10-Mettez_en_place_un_pipeline_d-orchestration_des_flux|main"
             "OPC11-Concevez_et_deployez_un_systeme_RAG|PAANNO/OPC11-Concevez_et_deployez_un_systeme_RAG|main"
             "OPC12-Gerez_un_projet_d-infrastructure|PAANNO/OPC12-Gerez_un_projet_d-infrastructure|main"
             "OPC13-Passez_votre_systeme_IA_du_POC_au_MVP_et_realisez_votre_portfolio_de_Data_Engineer|PAANNO/OPC13-Passez_votre_systeme_IA_du_POC_au_MVP_et_realisez_votre_portfolio_de_Data_Engineer|main"
