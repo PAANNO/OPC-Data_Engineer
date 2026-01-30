@@ -1,0 +1,8 @@
+sql/
+sql/schema/
+sql/queries/
+db/
+db/docker/
+db/docker/docker-compose.yml
+db/seeds/
+db/README.md

@@ -1,0 +1,6 @@
+ingestion/
+ingestion/connectors/
+infra/
+infra/aws/
+docker/
+docker/docker-compose.yml
