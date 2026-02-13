@@ -9,5 +9,14 @@
     "files.exclude": {
         "**/__pycache__": true,
         ".venv": true
-    }
+    },
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 100,
+            "driver": "SQLite",
+            "name": "immo (sqlite)",
+            "database": "${workspaceFolder:OPC3-Entrainez-vous_avec_SQL_et_creez_votre_BDD}/db/immo.sqlite"
+        }
+    ]
 }
