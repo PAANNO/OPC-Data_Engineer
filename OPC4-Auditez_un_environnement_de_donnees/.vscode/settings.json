@@ -17,5 +17,14 @@
             "name": "supermarket",
             "database": "${workspaceFolder:OPC4-Auditez_un_environnement_de_donnees}/db/supermartmarket.db"
         }
-    ]
+    ],
+    "terminal.integrated.profiles.windows": {
+    "SQLite ICU": {
+      "path": "C:\\Windows\\System32\\cmd.exe",
+      "env": {
+        "PATH": "C:\\dev\\sqlite\\sqlite-src-3520000;C:\\dev\\sqlite\\sqlite-src-3520000\\compat\\icu\\bin;%PATH%"
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "SQLite ICU"
 }

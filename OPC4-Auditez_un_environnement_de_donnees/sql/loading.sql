@@ -50,7 +50,7 @@ SELECT DISTINCT TRIM(ean),
          TRIM(categorie),
          TRIM(rayon),
          TRIM(libelle_produit),
-         CAST(prix AS DECIMAL(10, 2))
+         CAST(REPLACE(prix, ',', '.') AS NUMERIC)
 FROM stg_produits
 WHERE ean IS NOT NULL
     AND TRIM(ean) <> ''
@@ -63,8 +63,8 @@ WHERE ean IS NOT NULL
     AND prix IS NOT NULL
     AND TRIM(prix) <> '';
 
-INSERT INTO employe (employee_id, employe, prenom, nom, date_debut, hash_mdp, mail)
-SELECT DISTINCT TRIM(employee_id),
+INSERT INTO employe (id_employe, employe, prenom, nom, date_debut, hash_mdp, mail)
+SELECT DISTINCT TRIM(id_employe),
          TRIM(employe),
          TRIM(prenom),
          TRIM(nom),
@@ -72,8 +72,8 @@ SELECT DISTINCT TRIM(employee_id),
         TRIM(hash_mdp),
         TRIM(mail)
 FROM stg_employe
-WHERE employee_id IS NOT NULL
-    AND TRIM(employee_id) <> ''
+WHERE id_employe IS NOT NULL
+    AND TRIM(id_employe) <> ''
     AND employe IS NOT NULL
     AND TRIM(employe) <> ''
     AND prenom IS NOT NULL
@@ -87,15 +87,15 @@ WHERE employee_id IS NOT NULL
     AND mail IS NOT NULL
     AND TRIM(mail) <> '';
 
-INSERT INTO employe_calculated (employee_id, prenom, nom, date_debut, hash_mdp)
-SELECT DISTINCT TRIM(employee_id),
+INSERT INTO employe_calculated (id_employe, prenom, nom, date_debut, hash_mdp)
+SELECT DISTINCT TRIM(id_employe),
          TRIM(prenom),
          TRIM(nom),
          CAST(date_debut AS INTEGER),
         TRIM(hash_mdp)
 FROM stg_employe
-WHERE employee_id IS NOT NULL
-    AND TRIM(employee_id) <> ''
+WHERE id_employe IS NOT NULL
+    AND TRIM(id_employe) <> ''
     AND prenom IS NOT NULL
     AND TRIM(prenom) <> ''
     AND nom IS NOT NULL

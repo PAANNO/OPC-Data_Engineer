@@ -19,21 +19,21 @@ CREATE TABLE calendrier_calculated (
     mois_nom TEXT GENERATED ALWAYS AS (
         CASE CAST(strftime('%m', date('1899-12-30', '+' || date_id || ' days')) AS INTEGER)
             WHEN 1 THEN 'janvier'
-            WHEN 2 THEN 'fevrier'
+            WHEN 2 THEN 'février'
             WHEN 3 THEN 'mars'
             WHEN 4 THEN 'avril'
             WHEN 5 THEN 'mai'
             WHEN 6 THEN 'juin'
             WHEN 7 THEN 'juillet'
-            WHEN 8 THEN 'aout'
+            WHEN 8 THEN 'août'
             WHEN 9 THEN 'septembre'
             WHEN 10 THEN 'octobre'
             WHEN 11 THEN 'novembre'
-            WHEN 12 THEN 'decembre'
+            WHEN 12 THEN 'décembre'
         END
     ) STORED,
     annee_mois INTEGER GENERATED ALWAYS AS (date_id - CAST(strftime('%d', date('1899-12-30', '+' || date_id || ' days')) AS INTEGER) + 1) STORED,
-    jour_semaine INTEGER GENERATED ALWAYS AS (((date_id + 5) % 7) + 1) STORED,
+    jour_semaine INTEGER GENERATED ALWAYS AS (((date_id + 6) % 7) + 1) STORED,
     trimestre TEXT GENERATED ALWAYS AS (
         CASE
             WHEN CAST(strftime('%m', date('1899-12-30', '+' || date_id || ' days')) AS INTEGER) BETWEEN 1 AND 3 THEN 'Q1'
@@ -62,7 +62,7 @@ CREATE TABLE clients (
 );
 
 CREATE TABLE produits (
-    ean INTEGER PRIMARY KEY,
+    ean TEXT PRIMARY KEY,
     categorie TEXT NOT NULL,
     rayon TEXT NOT NULL,
     libelle_produit TEXT NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE vente_detail (
     id_bdd TEXT PRIMARY KEY,
     customer_id TEXT NOT NULL,
     id_employe TEXT NOT NULL,
-    ean INTEGER NOT NULL,
+    ean TEXT NOT NULL,
     date_achat INTEGER NOT NULL,
     id_ticket TEXT NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES clients(customer_id),
