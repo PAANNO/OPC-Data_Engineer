@@ -9,5 +9,13 @@
     "files.exclude": {
         "**/__pycache__": true,
         ".venv": true
-    }
+    },
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "supermarket",
+            "database": "${workspaceFolder:OPC4-Auditez_un_environnement_de_donnees}/db/supermartmarket.db"
+        }
+    ]
 }
