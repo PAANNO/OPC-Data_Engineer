@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS calendrier;
 DROP TABLE IF EXISTS calendrier_calculated;
 DROP TABLE IF EXISTS employe_calculated;
 
-CREATE TABLE calendrier_calculated (
+CREATE TABLE calendrier (
     date_id INTEGER PRIMARY KEY,
     annee INTEGER GENERATED ALWAYS AS (CAST(strftime('%Y', date('1899-12-30', '+' || date_id || ' days')) AS INTEGER)) STORED,
     mois INTEGER GENERATED ALWAYS AS (CAST(strftime('%m', date('1899-12-30', '+' || date_id || ' days')) AS INTEGER)) STORED,
@@ -44,21 +44,10 @@ CREATE TABLE calendrier_calculated (
     ) STORED
 );
 
-CREATE TABLE calendrier (
-    date INTEGER PRIMARY KEY,
-    annee INTEGER NOT NULL CHECK (annee >= 1900),
-    mois INTEGER NOT NULL CHECK (mois BETWEEN 1 AND 12),
-    jour INTEGER NOT NULL CHECK (jour BETWEEN 1 AND 31),
-    mois_nom TEXT NOT NULL,
-    annee_mois INTEGER NOT NULL,
-    jour_semaine INTEGER NOT NULL CHECK (jour_semaine BETWEEN 1 AND 7),
-    trimestre TEXT NOT NULL CHECK (trimestre IN ('Q1', 'Q2', 'Q3', 'Q4'))
-);
-
 CREATE TABLE clients (
     customer_id TEXT PRIMARY KEY,
-    date_inscription TEXT NOT NULL
-        CHECK (date(date_inscription) IS NOT NULL)
+    date_inscription INTEGER NOT NULL,
+    FOREIGN KEY (date_inscription) REFERENCES calendrier(date_id)
 );
 
 CREATE TABLE produits (
@@ -69,7 +58,7 @@ CREATE TABLE produits (
     prix REAL NOT NULL CHECK (prix >= 0)
 );
 
-CREATE TABLE employe_calculated (
+CREATE TABLE employe (
     id_employe TEXT PRIMARY KEY,
     employe TEXT GENERATED ALWAYS AS (lower(substr(prenom, 1, 1) || nom)) STORED UNIQUE,
     prenom TEXT NOT NULL,
@@ -77,18 +66,7 @@ CREATE TABLE employe_calculated (
     date_debut INTEGER NOT NULL,
     hash_mdp TEXT NOT NULL UNIQUE,
     mail TEXT GENERATED ALWAYS AS (lower(substr(prenom, 1, 1) || nom) || '@supersmartmarket.fr') STORED UNIQUE,
-    FOREIGN KEY (date_debut) REFERENCES calendrier(date)
-);
-
-CREATE TABLE employe (
-    id_employe TEXT PRIMARY KEY,
-    employe TEXT NOT NULL UNIQUE,
-    prenom TEXT NOT NULL,
-    nom TEXT NOT NULL,
-    date_debut INTEGER NOT NULL,
-    hash_mdp TEXT NOT NULL UNIQUE,
-    mail TEXT NOT NULL UNIQUE,
-    FOREIGN KEY (date_debut) REFERENCES calendrier(date)
+    FOREIGN KEY (date_debut) REFERENCES calendrier(date_id)
 );
 
 CREATE TABLE vente_detail (
@@ -101,7 +79,7 @@ CREATE TABLE vente_detail (
     FOREIGN KEY (customer_id) REFERENCES clients(customer_id),
     FOREIGN KEY (id_employe) REFERENCES employe(id_employe),
     FOREIGN KEY (ean) REFERENCES produits(ean),
-    FOREIGN KEY (date_achat) REFERENCES calendrier(date)
+    FOREIGN KEY (date_achat) REFERENCES calendrier(date_id)
 );
 
 CREATE INDEX idx_vente_detail_customer_id ON vente_detail(customer_id);
