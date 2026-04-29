@@ -1,60 +1,49 @@
-from pathlib import Path
+"""
+Fixtures pytest partagées par tous les tests.
+
+Une fixture est un "ingrédient" injecté automatiquement dans les tests
+qui en ont besoin. Ici on en définit trois :
+  - csv_dataframe : le DataFrame brut lu depuis le CSV
+  - mongo_client : un client MongoDB connecté
+  - mongo_collection : la collection patients de la base healthcare_db
+
+Le scope="session" signifie que la fixture est créée UNE SEULE FOIS
+pour toute la session de tests. Évite de re-lire le CSV 20 fois.
+"""
+
 import pandas as pd
 import pytest
 from pymongo import MongoClient
 
-from src.migrate_validate import DB_NAME, COLLECTION_NAME
+from src import config
 
 
-@pytest.fixture
-def sample_df():
-    return pd.DataFrame(
-        [
-            {
-                "Name": "Alice Doe",
-                "Age": 35,
-                "Gender": "Female",
-                "Blood Type": "A+",
-                "Medical Condition": "Diabetes",
-                "Date of Admission": "2024-01-10",
-                "Doctor": "Dr. Martin",
-                "Hospital": "City Hospital",
-                "Insurance Provider": "Aetna",
-                "Billing Amount": 1200.50,
-                "Room Number": 101,
-                "Admission Type": "Emergency",
-                "Discharge Date": "2024-01-12",
-                "Medication": "Metformin",
-                "Test Results": "Normal",
-            },
-            {
-                "Name": "Bob Smith",
-                "Age": 42,
-                "Gender": "Male",
-                "Blood Type": "O-",
-                "Medical Condition": "Cancer",
-                "Date of Admission": "2024-02-01",
-                "Doctor": "Dr. House",
-                "Hospital": "General Hospital",
-                "Insurance Provider": "Blue Cross",
-                "Billing Amount": 2500.00,
-                "Room Number": 202,
-                "Admission Type": "Urgent",
-                "Discharge Date": "2024-02-05",
-                "Medication": "Paracetamol",
-                "Test Results": "Abnormal",
-            },
-        ]
-    )
+@pytest.fixture(scope="session")
+def csv_dataframe() -> pd.DataFrame:
+    """DataFrame brut lu depuis le CSV source (avant transformation)."""
+    if not config.CSV_PATH.exists():
+        pytest.skip(f"CSV introuvable : {config.CSV_PATH}")
+    return pd.read_csv(config.CSV_PATH)
 
 
-@pytest.fixture
-def mongo_collection():
-    client = MongoClient("mongodb://localhost:27017")
-    db = client[DB_NAME]
-    collection = db[f"{COLLECTION_NAME}_test"]
-
-    collection.drop()
-    yield collection
-    collection.drop()
+@pytest.fixture(scope="session")
+def mongo_client() -> MongoClient:
+    """Client MongoDB. Skippe les tests si Mongo est injoignable."""
+    client = MongoClient(config.MONGO_URI, serverSelectionTimeoutMS=2000)
+    try:
+        client.admin.command("ping")
+    except Exception as exc:
+        pytest.skip(f"MongoDB injoignable sur {config.MONGO_URI} : {exc}")
+    yield client
     client.close()
+
+
+@pytest.fixture(scope="session")
+def mongo_collection(mongo_client):
+    """Collection patients (post-migration)."""
+    collection = mongo_client[config.MONGO_DB_NAME][config.MONGO_COLLECTION_NAME]
+    if collection.count_documents({}) == 0:
+        pytest.skip(
+            f"Collection vide : lancez 'uv run python -m src.migrate' avant les tests"
+        )
+    return collection

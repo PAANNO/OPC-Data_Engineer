@@ -1,18 +1,26 @@
-# Environments
+# Environnement Python / uv
 .venv/
-.vscode/
-
-# Notebooks checkpoints
-.ipynb_checkpoints/
-
-# Cache
 __pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
 
-# Datas
-data/*
-!data/README.md
-!data/**/.gitkeep
+# Données (le CSV n'est pas versionné)
+data/*.csv
 
-# Outputs
-outputs/*
-!outputs/**/.gitkeep
+# Exports (régénérables, parfois volumineux)
+exports/
+
+# Variables d'environnement
+.env
+
+# Logs
+logs/*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
