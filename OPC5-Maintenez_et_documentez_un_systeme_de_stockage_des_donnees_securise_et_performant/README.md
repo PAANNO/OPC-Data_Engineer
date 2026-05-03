@@ -4,10 +4,10 @@
 
 ---
 
-## 📋 Sommaire
+## Sommaire
 
 - [OPC5 — Maintenez et documentez un système de stockage des données sécurisé et performant](#opc5--maintenez-et-documentez-un-système-de-stockage-des-données-sécurisé-et-performant)
-  - [📋 Sommaire](#-sommaire)
+  - [Sommaire](#sommaire)
   - [1. Contexte et objectifs](#1-contexte-et-objectifs)
   - [2. Architecture](#2-architecture)
   - [3. Schéma de la base de données](#3-schéma-de-la-base-de-données)
@@ -47,16 +47,11 @@
 - **Tester** l'intégrité avant/après migration.
 - **Documenter** une trajectoire d'évolution vers AWS (S3, RDS, DocumentDB, ECS).
 
-**Compétences évaluées (RNCP39775BC02) :**
-- Définir et formaliser les processus de traitement et de stockage des données.
-- Mettre en place un système d'authentification afin de garantir la sécurité des données.
-- Configurer l'environnement de travail.
-
 ---
 
 ## 2. Architecture
 
-> 📌 **Schéma à produire** : un diagramme `docs/architecture.png` sera ajouté à la fin de l'étape 2/début de l'étape 4 pour la présentation orale.
+![architecture](./docs/img/architecture.jpeg)
 
 **Vue d'ensemble — services Docker Compose :**
 
@@ -85,7 +80,7 @@
 
 ## 3. Schéma de la base de données
 
-> 📌 **Schéma visuel à produire** : un diagramme `docs/schema_db.png` sera ajouté avant la soutenance.
+![schema_db](./docs/img/schema_db.jpeg)
 
 **Base :** `healthcare_db`
 **Collection :** `patients`
@@ -95,15 +90,15 @@
 
 | Champ | Type | Description | Origine CSV | Indexé |
 |---|---|---|---|---|
-| `_id` | ObjectId | Identifiant interne MongoDB | (généré) | ✅ par défaut |
+| `_id` | ObjectId | Identifiant interne MongoDB | (généré) | par défaut |
 | `name` | string | Nom du patient (Title Case normalisé) | `Name` | — |
-| `age` | int | Âge en années | `Age` | ✅ via `idx_age_gender` |
-| `gender` | string | Genre | `Gender` | ✅ via `idx_age_gender` |
+| `age` | int | Âge en années | `Age` | `idx_age_gender` |
+| `gender` | string | Genre | `Gender` | `idx_age_gender` |
 | `blood_type` | string | Groupe sanguin | `Blood Type` | — |
-| `medical_condition` | string | Pathologie principale | `Medical Condition` | ✅ `idx_medical_condition` |
-| `date_of_admission` | datetime | Date d'admission | `Date of Admission` | ✅ `idx_date_of_admission_desc` |
+| `medical_condition` | string | Pathologie principale | `Medical Condition` | `idx_medical_condition` |
+| `date_of_admission` | datetime | Date d'admission | `Date of Admission` | `idx_date_of_admission_desc` |
 | `doctor` | string | Médecin référent (Title Case) | `Doctor` | — |
-| `hospital` | string | Établissement | `Hospital` | ✅ `idx_hospital` |
+| `hospital` | string | Établissement | `Hospital` | `idx_hospital` |
 | `insurance_provider` | string | Assurance | `Insurance Provider` | — |
 | `billing_amount` | float | Montant facturé | `Billing Amount` | — |
 | `room_number` | int | Numéro de chambre | `Room Number` | — |
@@ -336,7 +331,7 @@ Les tests d'authentification sont réalisés manuellement et tracés dans [`docs
 
 ## 10. Recherches AWS
 
-Documentation détaillée dans [`docs/aws_research.md`](./docs/aws_research.md) (à produire en étape 3). Couvre :
+Documentation détaillée dans [`docs/aws_research.md`](./docs/aws_research.md). Couvre :
 - Création d'un compte AWS.
 - Modèles tarifaires.
 - Amazon RDS et la question de MongoDB sur RDS.
@@ -344,7 +339,7 @@ Documentation détaillée dans [`docs/aws_research.md`](./docs/aws_research.md) 
 - Déploiement via Amazon ECS.
 - Sauvegardes et monitoring (CloudWatch, snapshots).
 
-> ⚠️ Cette étape est documentaire — **aucun déploiement réel** n'est effectué dans ce projet.
+> Cette étape est documentaire — **aucun déploiement réel** n'est effectué dans ce projet.
 
 ---
 
@@ -358,23 +353,22 @@ L'ensemble des choix structurants (versions, rôles, indexation, format de logs,
 
 | Élément de consigne | Livrable | Preuve | Statut |
 |---|---|---|---|
-| Lien GitHub | URL du repo | À renseigner sur la plateforme OC | ⏳ À produire au rendu |
-| README détaillant la migration | `README.md` (ce fichier) | Sections 2, 3, 7 | ✅ Fait |
-| `docker-compose.yml` | Fichier YAML racine | Fichier + démo `docker compose up` | ✅ Fait |
-| `Dockerfile` du pipeline | `Dockerfile.migrator` | Fichier + image construite | ✅ Fait |
-| Présentation PowerPoint | `docs/presentation.pptx` | Fichier + soutenance | ⏳ Étape 4 |
-| Script de migration | `src/migrate.py` | Script + démo via `docker compose up` | ✅ Fait |
-| `requirements.txt` | Fichier racine | Fichier généré par `uv export` | ✅ Fait |
-| Tests d'intégrité automatisés | `tests/` + commande `pytest` | 25/25 verts | ✅ Fait |
-| Schéma BDD | `docs/schema_db.png` | Image insérée dans README §3 | 🟡 Tableau OK, image à produire |
-| Schéma d'architecture | `docs/architecture.png` | Image insérée dans README §2 | 🟡 Description OK, image à produire |
-| Système d'authentification | Code + doc | README §4 + `docs/security_tests.md` | ✅ Fait |
-| Rôles utilisateurs différenciés | `mongo-init/init-users.js` | Fichier + tests manuels documentés | ✅ Fait |
-| Volumes Docker (≥ 1) | `docker-compose.yml` | Volume nommé `mongo_data` + bind mount `./data` | ✅ Fait |
-| Recherches AWS | `docs/aws_research.md` | Document Markdown | ⏳ Étape 3 |
-| Fiche d'autoévaluation | PDF complété | Document signé | ⏳ Étape 5 |
+| Lien GitHub | URL du repo | [Repository - OPC5](https://github.com/PAANNO/OPC5-Maintenez_et_documentez_un_systeme_de_stockage_des_donnees_securise_et_performant) | Fait |
+| README détaillant la migration | `README.md` (ce fichier) | Sections 2, 3, 7 | Fait |
+| `docker-compose.yml` | Fichier YAML racine | Fichier + démo `docker compose up` | Fait |
+| `Dockerfile` du pipeline | `Dockerfile.migrator` | Fichier + image construite | Fait |
+| Présentation PowerPoint | `docs/presentation.pptx` | Fichier + soutenance | Fait |
+| Script de migration | `src/migrate.py` | Script + démo via `docker compose up` | Fait |
+| `requirements.txt` | Fichier racine | Fichier généré par `uv export` | Fait |
+| Tests d'intégrité automatisés | `tests/` + commande `pytest` | 25/25 verts | Fait |
+| Schéma BDD | `docs/schema_db.png` | Image insérée dans README §3 | Fait |
+| Schéma d'architecture | `docs/architecture.png` | Image insérée dans README §2 | Fait |
+| Système d'authentification | Code + doc | README §4 + `docs/security_tests.md` | Fait |
+| Rôles utilisateurs différenciés | `mongo-init/init-users.js` | Fichier + tests manuels documentés | Fait |
+| Volumes Docker (≥ 1) | `docker-compose.yml` | Volume nommé `mongo_data` + bind mount `./data` | Fait |
+| Recherches AWS | `docs/aws_research.md` | Document Markdown | Fait |
 
-Légende : ✅ fait • 🟡 partiel • ⏳ à faire • ⚠️ à clarifier
+Légende : Fait • partiel • à faire
 
 ---
 
@@ -382,11 +376,10 @@ Légende : ✅ fait • 🟡 partiel • ⏳ à faire • ⚠️ à clarifier
 
 | Étape | Statut | Date |
 |---|---|---|
-| Étape 1 — Migration MongoDB | ✅ Terminée | 2026-04-28 |
-| Étape 2 — Conteneurisation Docker (auth + rôles) | ✅ Terminée | 2026-04-28 |
-| Étape 3 — Recherches AWS | ⏳ À démarrer | — |
-| Étape 4 — Support de présentation | ⏳ À démarrer | — |
-| Étape 5 — Autoévaluation | ⏳ À démarrer | — |
+| Étape 1 — Migration MongoDB | Terminée | 28/04/2026 |
+| Étape 2 — Conteneurisation Docker (auth + rôles) | Terminée | 28/04/2026 |
+| Étape 3 — Recherches AWS | Terminée | 02/05/2026 |
+| Étape 4 — Support de présentation | Terminée | 02/05/2026 |
 
 **Étape 1 livrée :**
 - Pipeline `src/migrate.py` (extract → validate → transform → load → index → validate)
