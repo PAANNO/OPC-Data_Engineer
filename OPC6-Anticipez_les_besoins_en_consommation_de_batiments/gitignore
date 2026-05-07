@@ -1,0 +1,70 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- uv ---
+.venv/
+# uv.lock DOIT être versionné — ne pas l'exclure
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# --- VS Code ---
+.vscode/
+*.code-workspace
+
+# --- IDE divers ---
+.idea/
+*.swp
+*.swo
+
+# --- Système ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Données ---
+# Le CSV brut est trop volumineux pour Git → conserver uniquement la donnée traitée si raisonnable
+data/raw/*.csv
+data/processed/*.csv
+# Garder les .gitkeep pour préserver la structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# --- Modèles ---
+models/
+*.pkl
+*.joblib
+
+# --- BentoML ---
+bentoml/
+.bentoml/
+
+# --- Docker ---
+*.tar
+.docker/
+
+# --- AWS / secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+aws-credentials*
+.aws/
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Tests / couverture ---
+.pytest_cache/
+.coverage
+htmlcov/
