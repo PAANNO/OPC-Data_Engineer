@@ -79,7 +79,11 @@ Pour plus de conseils, suivez ce chapitre de cours : [Mettez en place votre envi
 
 #### Contenu du projet
 
-[Cours - Initiez-vous au Machine Learning](https://openclassrooms.com/fr/paths/1039/projects/1832/2264-cours---initiez-vous-au-machine-learning-)  [Ressource pédagogique - Lexique des notions abordées](https://openclassrooms.com/fr/paths/1039/projects/1832/2265-ressource-pedagogique---lexique-des-notions-abordees) [Mission Partie 1 - Prédisez la consommation d'énergie des bâtiments](https://openclassrooms.com/fr/paths/1039/projects/1832/2279-mission-partie-1---predisez-la-consommation-d'energie-des-batiments) [Mission Partie 2 - Exposez votre modèle prédictif via une API](https://openclassrooms.com/fr/paths/1039/projects/1832/2280-mission-partie-2---exposez-votre-modele-predictif-via-une-api) [Livrables et soutenance](https://openclassrooms.com/fr/paths/1039/projects/1832/2281-livrables-et-soutenance)
+[Cours - Initiez-vous au Machine Learning](https://openclassrooms.com/fr/paths/1039/projects/1832/2264-cours---initiez-vous-au-machine-learning-).  
+[Ressource pédagogique - Lexique des notions abordées](https://openclassrooms.com/fr/paths/1039/projects/1832/2265-ressource-pedagogique---lexique-des-notions-abordees).  
+[Mission Partie 1 - Prédisez la consommation d'énergie des bâtiments](https://openclassrooms.com/fr/paths/1039/projects/1832/2279-mission-partie-1---predisez-la-consommation-d'energie-des-batiments)  
+[Mission Partie 2 - Exposez votre modèle prédictif via une API](https://openclassrooms.com/fr/paths/1039/projects/1832/2280-mission-partie-2---exposez-votre-modele-predictif-via-une-api)  
+[Livrables et soutenance](https://openclassrooms.com/fr/paths/1039/projects/1832/2281-livrables-et-soutenance)
 
 ---
 

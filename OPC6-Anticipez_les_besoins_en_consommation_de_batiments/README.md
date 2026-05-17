@@ -156,7 +156,7 @@ uv export --no-dev --no-hashes > deployment/requirements.txt
 | Phase | Description | Charge | Statut | Date cible |
 |---|---|---|---|---|
 | 0 | Cadrage, récupération données + template, env uv | 3 h | 🟢 | 08/05 |
-| 1 | Cours OC "Initiez-vous au ML" (chapitres ciblés) | 6 h | ⚪ | 11/05 |
+| 1 | Cours OC "Initiez-vous au ML" (chapitres ciblés) | 6 h | 🟢 | 11/05 |
 | 2 | Analyse exploratoire (`01_eda.ipynb`) | 8 h | ⚪ | 17/05 |
 | 3 | Feature engineering (`02_modelisation.ipynb`) | 6 h | ⚪ | 20/05 |
 | 4 | Préparation des features pour la modélisation | 4 h | ⚪ | 22/05 |
@@ -175,8 +175,9 @@ uv export --no-dev --no-hashes > deployment/requirements.txt
 
 *Mise à jour à chaque étape importante du projet.*
 
-- **08/05/2026** — Démarrage du projet. Création du repo, mise en place de uv, copie de la consigne, du template OC et du dataset Seattle 2016.
-- **08/05/2026** — 🟢 **Phase 0 terminée.** Environnement uv opérationnel sur Python 3.13.13 ; stack ML (pandas 2.3.3, scikit-learn 1.8.0, BentoML 1.4.39, Pydantic 2.13.4) installée et validée par import.
+- **08/05/2026** - Démarrage du projet. Création du repo, mise en place de uv, copie de la consigne, du template OC et du dataset Seattle 2016.
+- **08/05/2026** - 🟢 **Phase 0 terminée.** Environnement uv opérationnel sur Python 3.13.13 ; stack ML (pandas 2.3.3, scikit-learn 1.8.0, BentoML 1.4.39, Pydantic 2.13.4) installée et validée par import.
+- **14/05/2026** - 🟢 **Phase 1 terminée.** Cours OC "Initiez-vous au ML" (chapitres ciblés) lu et [notes_phase1.md](./docs/notes/notes_phase1.md) rempli.
 
 ---
 
@@ -195,7 +196,14 @@ Les choix structurants (target retenue, périmètre du filtrage, librairies, mod
 - **Performance ≠ objectif principal** : OC précise que la performance n'est pas évaluée — c'est la rigueur de la démarche qui compte.
 - **Concepts BentoML à éviter** : pas de `Runner` (archivé), pas de `bentoctl` (archivé).
 - **Coût AWS** : arrêter le service après les tests / soutenance pour ne pas consommer le compte. Documenter les commandes d'arrêt.
-- **Limites du modèle** à expliciter en soutenance : généralisation à des bâtiments hors Seattle non garantie, données 2016 uniquement, biais d'échantillonnage des bâtiments mesurés.
+
+### Limites du modèle (identifiées en phase 2 — EDA)
+
+- **Généralisation** : le modèle est entraîné sur les bâtiments mesurés et déclarés en 2016. L'objectif business étant de prédire la consommation de bâtiments **non encore mesurés**, la généralisation n'est pas garantie si ces derniers ont un profil structurel différent (un éventuel biais de sélection est non quantifiable faute de données de comparaison).
+- **Échantillon temporel** : données 2016 uniquement, aucune dimension temporelle inter-année.
+- **Couverture géographique** : Seattle uniquement, généralisation à d'autres villes non garantie (climat, mix énergétique, réglementation locale).
+- **Déséquilibre des modalités catégorielles** : `PrimaryPropertyType` contient des catégories rares (Hospital, Laboratory, Restaurant…) avec moins de 15 bâtiments. La performance du modèle est probablement dégradée sur ces types peu représentés.
+- **Volumétrie finale** : ~1 611 bâtiments après nettoyage qualité (≈48 % du dataset brut), volumétrie qui reste raisonnable pour l'entraînement mais à mentionner comme contrainte.
 
 ---
 
